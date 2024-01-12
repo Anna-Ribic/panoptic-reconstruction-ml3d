@@ -33,7 +33,7 @@ class PostProcess(nn.Module):
         truncation = config.MODEL.FRUSTUM3D.TRUNCATION
         iso_value = config.MODEL.FRUSTUM3D.ISO_VALUE
 
-        geometry, _, _ = frustum_data["geometry"].dense(dense_dimensions, min_coordinates, default_value=truncation)
+        geometry, _, _ = frustum_data["geometry"].dense(dense_dimensions, min_coordinates)
         instances, _, _ = frustum_data["instance3d"].dense(dense_dimensions, min_coordinates)
         semantics, _, _ = frustum_data["semantic3d_label"].dense(dense_dimensions, min_coordinates)
 
@@ -42,6 +42,7 @@ class PostProcess(nn.Module):
         semantics = semantics.squeeze()
 
         # filter 3d instances by 2d instances
+        
         instances_filtered = filter_instances(instance_data, instances)
 
         # merge output
@@ -93,7 +94,7 @@ class PostProcess(nn.Module):
         # Search label for unassigned surface voxels
         unassigned_voxels = (surface_mask & (panoptic_instances == 0).bool()).nonzero()
 
-        panoptic_instances_copy = panoptic_instances.clone()
+        panoptic_instances_copy = panoptic_instances
         # for voxel in unassigned_voxels:
         #     label = nn_search_old(panoptic_instances_copy, voxel)
         #
@@ -119,7 +120,7 @@ class PostProcess(nn.Module):
 def filter_instances(instances2d,  instances3d):
     instances_filtered = torch.zeros_like(instances3d)
     instance_ids_2d = (instances2d["locations"][0] + 1)
-    for instance_id in instance_ids_2d:
+    for instance_id in map(lambda x: x.item(), instance_ids_2d):
         if instance_id != 0:
             instance_mask = instances3d == instance_id
             instances_filtered[instance_mask] = instance_id
@@ -154,6 +155,11 @@ def nn_search(grid, point, radius=3):
             for z in range(start, end):
                 offset = torch.tensor([x, y, z], device=point.device)
                 point_offset = point + offset
+                
+                # Fix index out of bounds
+                assert grid.shape[0] == grid.shape[1] == grid.shape[2]
+                point_offset = point_offset.clip(0, grid.shape[0]-1)
+                
                 label_bi = grid[point_offset[:, 0],
                                 point_offset[:, 1],
                                 point_offset[:, 2]]

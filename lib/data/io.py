@@ -86,7 +86,7 @@ def read_spare_distance_field(file_path: os.PathLike) -> Tuple[List, np.array, n
 def read_sparse_distance_field_to_dense(file_path: os.PathLike, default_value: float = 0.0) -> np.array:
     (dim_x, dim_y, dim_z), locations, values = read_spare_distance_field(file_path)
 
-    grid = np.full((dim_x, dim_y, dim_z), fill_value=default_value, dtype=np.float)
+    grid = np.full((dim_x, dim_y, dim_z), fill_value=default_value, dtype=float)
     grid[locations[:, 0], locations[:, 1], locations[:, 2]] = values
 
     return grid

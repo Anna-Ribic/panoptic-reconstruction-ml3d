@@ -41,7 +41,7 @@ def main():
     print(f"Updated {len(keys_to_update)} keys")
 
     # save checkpoint
-    torch.save({"model": new_checkpoint}, "data/panoptic_front3d_v2.pth")
+    torch.save({"model": new_checkpoint}, "data/panoptic_front3d.pth")
 
 
 if __name__ == '__main__':
