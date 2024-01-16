@@ -70,5 +70,14 @@ rename it panoptic_front3d.pth
 ---
 
 
+---
+FIX EXTENSION ERROR when installing mask-rcnn
+
+cuda_dir="maskrcnn_benchmark/csrc/cuda"
+perl -i -pe 's/AT_CHECK/TORCH_CHECK/' $cuda_dir/deform_pool_cuda.cu $cuda_dir/deform_conv_cuda.cu
+# You can then run the regular setup command
+python3 setup.py build develop
+
+
 
 python test_net_single_image.py -i data/front3d-sample/rgb_0007.png -o outputs/front3d-sample-0007
