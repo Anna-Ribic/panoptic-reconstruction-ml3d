@@ -71,7 +71,7 @@ rename it panoptic_front3d.pth
 
 
 ---
-#FIX EXTENSION ERROR when installing mask-rcnn
+# FIX EXTENSION ERROR when installing mask-rcnn
 
 cuda_dir="maskrcnn_benchmark/csrc/cuda"
 
