@@ -2,12 +2,17 @@ import argparse
 import json
 import os
 from pathlib import Path
+import sys
+
 
 import numpy as np
 import torch
 from PIL import Image
 from typing import Dict, Any
 
+print(os.getcwd())
+sys.path.append(os.getcwd())
+import lib
 from lib import modeling
 
 import lib.data.transforms2d as t2d
@@ -118,7 +123,7 @@ def visualize_results(results: Dict[str, Any], output_path: os.PathLike) -> None
     frustum2camera = torch.inverse(camera2frustum)
     print(frustum2camera)
     vis.write_distance_field(surface.squeeze(), None, output_path / "mesh_geometry.ply", transform=frustum2camera)
-    vis.write_distance_field(surface.squeeze(), instances.squeeze(), output_path / "mesh_instances.ply", transform=frustum2camera)
+    vis.write_distance_field(surface.squeeze(), instances.squeeze(), output_path / "mesh_instances.ply", transform=frustum2camera, semantic_labels=semantics.squeeze())
     vis.write_distance_field(surface.squeeze(), semantics.squeeze(), output_path / "mesh_semantics.ply", transform=frustum2camera)
 
     with open(output_path / "semantic_classes.json", "w") as f:
