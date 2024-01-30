@@ -32,7 +32,7 @@ semantics = {
         (227, 119, 194): 'Bathtub',		# bathtub
         (82, 84, 163): 'Other' 		# otherfurn
 }
-
+"""
 sem_labels = [
         'None',
         'Wall',		# wall
@@ -76,7 +76,22 @@ sem_labels = [
         'Other',  		# otherfurn
     'Unknown20',
     'Unknown21',
-    ]
+    ]"""
+
+sem_labels = [
+    'None',
+    'Cabinet',
+    'Bed',
+    'Chair',
+    'Sofa',
+    'Table',
+    'Desk',
+    'Dresser',
+    'Lamp',
+    'Other',
+    'Wall',
+    'Floor'
+]
 
 
 def write_distance_field(distance_field: Union[np.array, torch.Tensor], labels: Optional[Union[np.array, torch.Tensor]],
