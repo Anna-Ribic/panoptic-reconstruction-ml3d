@@ -40,8 +40,8 @@ vq_cat="all"
 # cat='chair'
 cat='all'
 max_dataset_size=10000000
-dataset_mode='panoptic_mm2shape'
-dataroot="data/test" # change this to match your dataroot
+dataset_mode='3dfuture'
+dataroot="preprocess/3D-FUTURE-model" 
 trunc_thres=0.2
 #####################
 
