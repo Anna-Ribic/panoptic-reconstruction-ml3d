@@ -2,7 +2,7 @@ import os
 import json
 import csv
 import h5py
-import tqdm
+from tqdm import tqdm
 import numpy as np
 from PIL import Image
 import torch
