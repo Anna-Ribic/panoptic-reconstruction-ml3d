@@ -34,7 +34,7 @@ class ThreeDFutureMM2ShapeDataset(BaseDataset):
             model_id = d['model_id']
             text_info = d['category']
             sdf_path = os.path.join(self.dataroot, f'SDF_v1_64/{model_id}/ori_sample_grid.h5')
-            image_path = os.path.join(self.dataroot, f'../../data/3D-FUTURE-mode/{model_id}/image.jpg')
+            image_path = os.path.join(self.dataroot, f'../../data/3D-FUTURE-model/{model_id}/image.jpg')
 
             if not os.path.exists(sdf_path or image_path):
                 continue
