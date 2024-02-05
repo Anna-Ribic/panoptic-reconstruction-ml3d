@@ -36,7 +36,7 @@ class ThreeDFutureMM2ShapeDataset(BaseDataset):
             sdf_path = os.path.join(self.dataroot, f'SDF_v1_64/{model_id}/ori_sample_grid.h5')
             image_path = os.path.join(self.dataroot, f'../../data/3D-FUTURE-model/{model_id}/image.jpg')
 
-            if not os.path.exists(sdf_path) or not os.path.exists(image_path) or text_info == 'None':
+            if not os.path.exists(sdf_path) or not os.path.exists(image_path) or text_info is None:
                 continue
 
             self.model_list.append(sdf_path)
@@ -105,7 +105,6 @@ class ThreeDFutureMM2ShapeDataset(BaseDataset):
         # TODO(f.srambical): add image code
         sdf_h5_file = self.model_list[index]
         text = self.text_list[index]
-        image = self.img_list[index]
 
         with h5py.File(sdf_h5_file, 'r') as f:
             sdf = f['pc_sdf_sample'][:].astype(np.float32)
@@ -132,6 +131,16 @@ class ThreeDFutureMM2ShapeDataset(BaseDataset):
         # img: for one view
         img = imgs[0]
         img_path = img_paths[0]
+
+        if (sdf is None):
+            cprint('sdf is None', 'red')
+            raise NotImplementedError
+        if (img is None):
+            cprint('img is None', 'red')
+            raise NotImplementedError
+        if (text is None):
+            cprint('text is None', 'red')
+            raise NotImplementedError
 
         ret = {
             'sdf': sdf,
