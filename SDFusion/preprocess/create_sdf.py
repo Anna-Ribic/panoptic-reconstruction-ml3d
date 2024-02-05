@@ -16,7 +16,7 @@ import json
 CUR_PATH = os.path.dirname(os.path.realpath(__file__))
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dset', type=str, choices=['shapenet', 'abc', 'pix3d', 'building'], default='shapenet', help='which dataset to extract sdf')
+parser.add_argument('--dset', type=str, choices=['shapenet', 'abc', 'pix3d', 'building', '3dfuture'], default='shapenet', help='which dataset to extract sdf')
 parser.add_argument('--thread_num', type=int, default='9', help='how many objs are creating at the same time')
 parser.add_argument('--reduce', type=int, default=4, help='define resolution. res=256//reduce')
 parser.add_argument('--category', type=str, default="all", help='Which single class to generate on [default: all, can '
@@ -322,7 +322,7 @@ def create_sdf_obj(sdfcommand, marching_cube_command, norm_mesh_dir, sdf_dir, ob
 
     if FLAGS.dset == 'abc':
         model_id = os.path.basename(obj).replace('.obj', '')
-    elif FLAGS.dset == 'pix3d':
+    elif FLAGS.dset == 'pix3d' or FLAGS.dset == '3dfuture':
         model_id = obj.split('/')[-2]
     elif FLAGS.dset == 'building':
         model_id = os.path.basename(obj).replace('.obj', '')
@@ -476,7 +476,11 @@ def create_sdf_pix3d(sdfcommand, marching_cube_command, LIB_command,
     #     gt_lines = [l.strip('\n')[3:] for l in f.readlines()] # no ../
 
     lst_dir
-    dataroot = lst_dir.split('/pix3d/filelists')[0]
+    # TODO: not sure why this is needed
+    lst_dir = f".{lst_dir}"
+    dataroot = os.getcwd().split('/SDFusion/')[0]
+    dataroot = os.path.join(dataroot, 'SDFusion')
+    dataroot = os.path.join(dataroot, 'data')
     with open(f'{dataroot}/pix3d/pix3d.json', 'r') as f:
         pix3d_info = json.load(f)
     pix3d_root = f'{dataroot}/pix3d'
@@ -547,7 +551,7 @@ def create_sdf_pix3d(sdfcommand, marching_cube_command, LIB_command,
                 #     # take the first one. for some model, there are multiple obj files
                 #     obj_f = glob.glob(f'{pix3d_root}/model_align/{cat}/{model_id}/*.obj')[0]
 
-                obj_files = glob.glob(f'{model_dir}/{model_id}/*.obj')#[0]
+                obj_files = glob.glob(f'{dataroot}/{model_dir}/{model_id}/*.obj')#[0]
 
                 # list_obj += obj_files
                 # if obj_f not in list_obj:
@@ -818,6 +822,55 @@ def create_sdf_shapenet(sdfcommand, marching_cube_command, LIB_command,
         start+=repeat
     print("finish all")
 
+def create_sdf_3dfuture(sdfcommand, marching_cube_command, LIB_command,
+                        num_sample, bandwidth, res, expand_rate, raw_dirs, iso_val,
+                        max_verts, ish5=True, normalize=True, g=0.00, reduce=4):
+    '''
+    Create SDF for 3D-FUTURE dataset.
+    '''
+    os.system(LIB_command)
+    model_dir = '../data/3D-FUTURE-model/'
+    norm_mesh_dir = raw_dirs["norm_mesh_dir"]
+    sdf_dir = raw_dirs["sdf_dir"]
+
+    if not os.path.exists(sdf_dir): os.makedirs(sdf_dir)
+    if not os.path.exists(norm_mesh_dir): os.makedirs(norm_mesh_dir)
+
+    list_obj = [os.path.join(model_dir, d, 'normalized_model.obj') for d in os.listdir(model_dir) if os.path.isdir(os.path.join(model_dir, d))]
+
+    repeat = len(list_obj)
+    sdfcommand_lst = [sdfcommand for _ in range(repeat)]
+    marching_cube_command_lst = [marching_cube_command for _ in range(repeat)]
+    norm_mesh_dir_lst = [norm_mesh_dir for _ in range(repeat)]
+    sdf_dir_lst = [sdf_dir for _ in range(repeat)]
+    res_lst = [res for _ in range(repeat)]
+    iso_val_lst = [iso_val for _ in range(repeat)]
+    expand_rate_lst = [expand_rate for _ in range(repeat)]
+    indx_lst = list(range(repeat))
+    ish5_lst = [ish5 for _ in range(repeat)]
+    normalize_lst = [normalize for _ in range(repeat)]
+    num_sample_lst = [num_sample for _ in range(repeat)]
+    bandwidth_lst = [bandwidth for _ in range(repeat)]
+    max_verts_lst = [max_verts for _ in range(repeat)]
+    g_lst = [g for _ in range(repeat)]
+    reduce_lst = [reduce for _ in range(repeat)]
+
+    with Parallel(n_jobs=FLAGS.thread_num) as parallel:
+        parallel(delayed(create_sdf_obj)
+                 (sdfcommand, marching_cube_command, norm_mesh_dir, sdf_dir, obj, res, iso_val, expand_rate, indx, ish5, normalize, num_sample, bandwidth, max_verts, g, reduce)
+                 for sdfcommand, marching_cube_command, norm_mesh_dir, sdf_dir, obj, res, iso_val, 
+                     expand_rate, indx, ish5, normalize, num_sample, bandwidth, max_verts, g, reduce
+                 in zip(sdfcommand_lst,
+                        marching_cube_command_lst,
+                        norm_mesh_dir_lst,
+                        sdf_dir_lst,
+                        list_obj,
+                        res_lst,
+                        iso_val_lst,
+                        expand_rate_lst,
+                        indx_lst, ish5_lst, normalize_lst, num_sample_lst,
+                        bandwidth_lst, max_verts_lst, g_lst, reduce_lst))
+
 
 # def test_sdf(sdf_h5_file):
 #     h5_f = h5py.File(sdf_h5_file, 'r')
@@ -859,7 +912,12 @@ if __name__ == "__main__":
 
     # lst_dir, cats, all_cats, raw_dirs = get_sdf_file_lst.get_all_info(dset)
 
-    info_file = '../dataset_info_files/info-shapenet.json'
+    if dset == 'pix3d':
+        info_file = '../dataset_info_files/info-pix3d.json'
+    elif dset == '3dfuture':
+        info_file = '../dataset_info_files/info-3dfuture.json'
+    else:
+        info_file = '../dataset_info_files/info-shapenet.json'
     with open(info_file) as json_file:
         info_data = json.load(json_file)
         lst_dir, cats, all_cats, raw_dirs = info_data["lst_dir"], info_data['cats'], info_data['all_cats'], info_data['raw_dirs_v1']
@@ -919,5 +977,7 @@ if __name__ == "__main__":
                    num_sample, bandwidth, res, expand_rate,
                    lst_dir, cats, raw_dirs,
                    iso_val, max_verts, ish5=True, normalize=True, g=0.00, reduce=reduce)
-
-    
+    elif dset == '3dfuture':
+        create_sdf_3dfuture(sdf_cmd, mcube_cmd, "source %s" % lib_cmd,
+                   num_sample, bandwidth, res, expand_rate, raw_dirs, iso_val,
+                   max_verts, ish5=True, normalize=True, g=0.00, reduce=reduce)

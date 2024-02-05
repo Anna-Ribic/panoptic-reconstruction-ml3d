@@ -23,7 +23,7 @@
         "wardrobe"
     ],
     "raw_dirs_v1": {
-        "mesh_dir": "pix3d/model_align",
+        "mesh_dir": "pix3d/model",
         "norm_mesh_dir": "pix3d/norm_mesh_dir/",
         "sdf_dir": "pix3d/SDF_v1_64/"
     }

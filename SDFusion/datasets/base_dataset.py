@@ -75,6 +75,12 @@ def CreateDataset(opt):
         train_dataset.initialize(opt, 'train', cat=opt.cat, res=opt.res)
         test_dataset.initialize(opt, 'test', cat=opt.cat, res=opt.res)
 
+    elif opt.dataset_mode == 'panoptic_mm2shape':
+        from datasets.panoptic_mm2shape_dataset import PanopticMM2ShapeDataset
+        train_dataset = PanopticMM2ShapeDataset()
+        test_dataset = PanopticMM2ShapeDataset()
+        train_dataset.initialize(opt, 'train', res=opt.res)
+        test_dataset.initialize(opt, 'test', res=opt.res)
     else:
         raise ValueError("Dataset [%s] not recognized." % opt.dataset_mode)
 
