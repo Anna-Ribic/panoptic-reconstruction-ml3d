@@ -6,4 +6,4 @@ reduce=4
 # category='all'
 # TODO: have to change
 category='all'
-python3 -u create_sdf.py --dset ${dset} --thread_num 9 --reduce ${reduce} --category ${category}
+python3 -u create_sdf.py --dset ${dset} --thread_num 32 --reduce ${reduce} --category ${category}
