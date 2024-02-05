@@ -18,7 +18,7 @@ class ThreeDFutureMM2ShapeDataset(BaseDataset):
         self.opt = opt
         self.max_dataset_size = opt.max_dataset_size
         self.dataroot = opt.dataroot
-        self.phase = opt.phase
+        self.phase = phase
         self.res = res
 
         self.json_file = os.path.join(self.dataroot, f'model_info.json')
@@ -36,7 +36,7 @@ class ThreeDFutureMM2ShapeDataset(BaseDataset):
             sdf_path = os.path.join(self.dataroot, f'SDF_v1_64/{model_id}/ori_sample_grid.h5')
             image_path = os.path.join(self.dataroot, f'../../data/3D-FUTURE-model/{model_id}/image.jpg')
 
-            if not os.path.exists(sdf_path or image_path):
+            if not os.path.exists(sdf_path) or not os.path.exists(image_path) or text_info == 'None':
                 continue
 
             self.model_list.append(sdf_path)
