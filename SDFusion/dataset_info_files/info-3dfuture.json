@@ -1,0 +1,10 @@
+{
+    "lst_dir": null,
+    "cats": null,
+    "all_cats": null,
+    "raw_dirs_v1": {
+        "mesh_dir": "3D-FUTURE-model",
+        "norm_mesh_dir": "3D-FUTURE-model/norm_mesh_dir/",
+        "sdf_dir": "3D-FUTURE-model/SDF_v1_64/"
+    }
+}
