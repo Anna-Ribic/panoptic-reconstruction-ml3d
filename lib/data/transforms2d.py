@@ -344,8 +344,90 @@ class RandomRotation:
         return image
 
 
+reverse_label_mapping = {
+    -2:-2,
+    -1: -1,
+    0: 0,    # void
+    8: 1,    # cabinet
+    71: 1,   # cabinet
+    14: 1,   # cabinet
+    31: 1,   # cabinet
+    36: 1,   # cabinet
+    48: 2,   # bed
+    58: 2,   # bed
+    40: 2,   # bed
+    65: 2,   # bed
+    27: 2,   # bed
+    1: 2,    # bed
+    23: 3,   # chair
+    28: 3,   # chair
+    33: 3,   # chair
+    46: 3,   # chair
+    47: 3,   # chair
+    62: 3,   # chair
+    20: 4,   # sofa
+    21: 4,   # sofa
+    29: 4,   # sofa
+    30: 4,   # sofa
+    35: 4,   # sofa
+    44: 4,   # sofa
+    64: 4,   # sofa
+    67: 4,   # sofa
+    7: 5,    # table
+    39: 5,   # table
+    49: 5,   # table
+    50: 5,   # table
+    63: 5,   # table
+    56: 6,   # desk
+    15: 7,   # dresser
+    10: 7,   # dresser
+    17: 8,   # lamp
+    57: 8,   # lamp
+    2: 9,    # other
+    3: 9,    # other
+    4: 9,    # other
+    5: 9,    # other
+    6: 9,    # other
+    9: 9,    # other
+    11: 9,   # other
+    12: 9,   # other
+    16: 9,   # other
+    19: 9,   # other
+    24: 9,   # other
+    25: 9,   # other
+    26: 9,   # other
+    34: 9,   # other
+    37: 9,   # other
+    38: 9,   # other
+    41: 9,   # other
+    42: 9,   # other
+    43: 9,   # other
+    51: 9,   # other
+    52: 9,   # other
+    53: 9,   # other
+    54: 9,   # other
+    55: 9,   # other
+    60: 9,   # other
+    61: 9,   # other
+    66: 9,   # other
+    69: 9,   # other
+    70: 9,   # other
+    72: 9,   # other
+    73: 9,   # other
+    13: 10,  # wall
+    18: 10,  # wall
+    22: 10,  # wall
+    32: 10,  # wall
+    59: 10,  # wall
+    68: 10,  # wall
+    45: 11,  # floor
+}
+
+def map_labels(label):
+    return reverse_label_mapping.get(label, label)
+
 class SegmentationToMasks:
-    def __init__(self, image_size: Tuple[int, int], num_min_pixels: int = 200, max_instances: int = None,
+    def __init__(self, image_size: Tuple[int, int], num_min_pixels: int = 50, max_instances: int = None,
                  shuffle_instance_ids: bool = False, ignore_classes: List[int] = None):
         self.image_size = image_size
         self.num_min_pixels = num_min_pixels
@@ -356,11 +438,16 @@ class SegmentationToMasks:
             ignore_classes = []
         self.ignore_classes = ignore_classes
 
+
     def __call__(self, segmentation_image: np.array):
         # Segmentation file stores at channels
         # 0: semantic segmentation
         # 1: instance segmentation
         semantic_image = segmentation_image[..., 0]
+
+        mapped_array = np.vectorize(map_labels)(semantic_image) #TODO
+        semantic_image = mapped_array
+
         instance_image = segmentation_image[..., 1]
 
         labels = []

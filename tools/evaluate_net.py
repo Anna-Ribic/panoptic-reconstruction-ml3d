@@ -41,6 +41,7 @@ def main(opts, start=0, end=None):
 
     # Define dataset
     # config.DATALOADER.NUM_WORKERS=0
+    print('config', config.DATASETS.VAL)
     dataloader = setup_dataloader(config.DATASETS.VAL, False, is_iteration_based=False, shuffle=False)
     dataloader.dataset.samples = dataloader.dataset.samples[start:end]
     print(f"Loaded {len(dataloader.dataset)} samples.")
@@ -65,10 +66,10 @@ def main(opts, start=0, end=None):
                 del targets, images
                 continue
 
-        if config.DATASETS.NAME == "front3d":
+        """if config.DATASETS.NAME == "front3d":
             frustum_mask = dataloader.dataset.frustum_mask
-        else:
-            frustum_mask = targets[0].get_field("frustum_mask").squeeze()
+        else:"""
+        frustum_mask = targets[0].get_field("frustum_mask").squeeze()
 
         # Prepare ground truth
         instances_gt, instance_semantic_classes_gt = _prepare_semantic_mapping(targets[0].get_field("instance3d").squeeze(),
@@ -96,8 +97,6 @@ def main(opts, start=0, end=None):
         with open(output_path / f"{file_name}.json", "w") as f:
             json.dump({k: cat.as_metric for k, cat in per_sample_result.items()}, f, indent=4)
 
-        if opts.verbose:
-            pprint(per_sample_result)
 
     # Reduce metric
     quantitative = metric.reduce()
@@ -144,11 +143,14 @@ def _prepare_semantic_mapping(instances, semantics, offset=2):
             semantic_things = semantic_region[
                 (semantic_region != 0) & (semantic_region != 10) & (semantic_region != 11)]
 
-            unique_labels, semantic_counts = torch.unique(semantic_things, return_counts=True)
-            max_count, max_count_index = torch.max(semantic_counts, dim=0)
-            selected_label = unique_labels[max_count_index]
+            if len(semantic_things)==0:
+                semantic_mapping[panoptic_instance_id] = 9
+            else:
+                unique_labels, semantic_counts = torch.unique(semantic_things, return_counts=True)
+                max_count, max_count_index = torch.max(semantic_counts, dim=0)
+                selected_label = unique_labels[max_count_index]
 
-            semantic_mapping[panoptic_instance_id] = selected_label.int().item()
+                semantic_mapping[panoptic_instance_id] = selected_label.int().item()
 
     # Merge stuff classes
     # Merge floor class
@@ -215,7 +217,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.eval_only:
+    """if args.eval_only:
         evaluate_jsons(args)
-    else:
-        main(args, args.s, args.e)
+    else:"""
+    main(args, args.s, args.e)

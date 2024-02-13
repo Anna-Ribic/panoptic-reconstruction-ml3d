@@ -62,6 +62,7 @@ class FastRCNNLossComputation:
             )
             matched_idxs = matched_targets.get_field("matched_idxs")
             labels_per_image = matched_targets.get_field("label")
+            labels_per_image[labels_per_image>=13] = 0
             labels_per_image = labels_per_image.to(dtype=torch.int64)
 
             # Label background (below the low threshold)
@@ -77,6 +78,7 @@ class FastRCNNLossComputation:
 
             labels.append(labels_per_image)
             regression_targets.append(regression_targets_per_image)
+
 
         return labels, regression_targets
 
@@ -112,7 +114,6 @@ class FastRCNNLossComputation:
             img_sampled_inds = torch.nonzero(pos_inds_img | neg_inds_img, as_tuple=False).squeeze(1)
             proposals_per_image = proposals[img_idx][img_sampled_inds]
             proposals[img_idx] = proposals_per_image
-
         self._proposals = proposals
         return proposals
 
@@ -141,8 +142,8 @@ class FastRCNNLossComputation:
 
         labels = cat([proposal.get_field("label") for proposal in proposals], dim=0)
         regression_targets = cat([proposal.get_field("regression_targets") for proposal in proposals], dim=0)
-
         classification_loss = F.cross_entropy(class_logits, labels, self.weights)
+
 
         # get indices that correspond to the regression targets for
         # the corresponding ground truth labels, to be used with
@@ -155,6 +156,7 @@ class FastRCNNLossComputation:
         else:
             map_inds = 4 * labels_pos[:, None] + torch.tensor(
                 [0, 1, 2, 3], device=device)
+
 
         box_loss = smooth_l1_loss(
             box_regression[sampled_pos_inds_subset[:, None], map_inds],

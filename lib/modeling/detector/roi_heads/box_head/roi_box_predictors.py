@@ -10,6 +10,7 @@ class FastRCNNPredictor(nn.Module):
 
         num_inputs = in_channels
 
+
         num_classes = config.MODEL.INSTANCE2D.ROI_HEADS.ROI_BOX_HEAD.NUM_CLASSES
         self.avgpool = nn.AdaptiveAvgPool2d(1)
         self.cls_score = nn.Linear(num_inputs, num_classes)

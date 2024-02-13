@@ -12,6 +12,23 @@ from lib.modeling.backbone import UNetSparse, GeometryHeadSparse, Classification
 from lib.structures.field_list import collect
 from lib.modeling.utils import ModuleResult
 
+import matplotlib.pyplot as plt
+import tripy
+from plyfile import PlyData, PlyElement
+import numpy as np
+
+def write_ply(filename, occupancy_field):
+    nonzero_indices = torch.nonzero(occupancy_field)
+
+    # Convert indices to numpy array
+    vertices = nonzero_indices.cpu().detach().numpy()
+
+    with open(filename, 'w') as f:
+        for point in vertices:
+            f.write(f"v {point[0]} {point[1]} {point[2]}\n")
+
+    # Save the PlyData to a PLY file
+
 
 class FrustumCompletion(nn.Module):
     def __init__(self):
@@ -124,6 +141,8 @@ class FrustumCompletion(nn.Module):
         # Occupancy 64
         occupancy_prediction = predictions[0]
         occupancy_ground_truth = collect(targets, "occupancy_64")
+        #write_ply('predicted.obj', occupancy_prediction.squeeze())
+        #write_ply('target.obj', occupancy_ground_truth.squeeze())
         occupancy_loss, occupancy_result = self.compute_occupancy_64_loss(occupancy_prediction, occupancy_ground_truth,
                                                                           frustum_mask, weighting_mask)
         hierarchy_losses.update(occupancy_loss)

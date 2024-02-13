@@ -15,13 +15,13 @@ class DatasetCatalog:
 
         "Front3D_Train": {
             "file_list_path": "resources/front3d/train_list_3d.txt",
-            "dataset_root_path": "data/front3d/",
+            "dataset_root_path": "../front/output3/",#"../datasets/" ,#../front/output3/", #"data/front3d/",
             "factory": "Front3D"
         },
 
         "Front3D_Validation": {
             "file_list_path": "resources/front3d/validation_list_3d.txt",
-            "dataset_root_path": "data/front3d/",
+            "dataset_root_path": "../front/output3/",#"../datasets/", #"data/front3d/",
             "factory": "Front3D"
 
         },

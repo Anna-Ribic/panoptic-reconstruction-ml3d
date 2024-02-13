@@ -14,11 +14,13 @@ print(os.getcwd())
 sys.path.append(os.getcwd())
 import lib
 from lib import modeling
+from lib import utils
 
 import lib.data.transforms2d as t2d
 from lib.config import config
 from lib.utils.intrinsics import adjust_intrinsic
 from lib.structures import DepthMap
+from lib import solver
 
 import lib.visualize as vis
 from lib.visualize.image import write_detection_image, write_depth
@@ -33,8 +35,27 @@ def main(opts):
     # Define model and load checkpoint.
     print("Load model...")
     model = modeling.PanopticReconstruction()
-    checkpoint = torch.load(opts.model)
-    model.load_state_dict(checkpoint["model"])  # load model checkpoint
+    
+    #checkpoint = torch.load(opts.model)
+    #model.load_state_dict(checkpoint["model"])  # load model checkpoint
+
+    ########
+    #model.fix_weights()
+
+    # Setup optimizer, scheduler, checkpointer
+    optimizer = torch.optim.Adam(model.parameters())
+    scheduler = solver.WarmupMultiStepLR(optimizer, (250000, 350000), 0.001)
+
+    print('opst',opts.model)
+    output_path = Path(opts.model) #Path('../con/train2d_without_pre2/')
+    checkpointer = utils.DetectronCheckpointer(model, optimizer, scheduler, output_path)
+
+    # Load the checkpoint
+    checkpoint_data = checkpointer.load()
+
+    ########
+
+
     model = model.to(device)  # move to gpu
     model.switch_test()
 
@@ -153,4 +174,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(args)
+
 

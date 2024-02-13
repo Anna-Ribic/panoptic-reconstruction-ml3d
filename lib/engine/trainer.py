@@ -49,6 +49,7 @@ class Trainer:
         # Additionally load a 2D model which overwrites the previously loaded weights
         # TODO: move to checkpointer?
         if config.MODEL.PRETRAIN2D:
+            print("Restoring:", config.MODEL.PRETRAIN2D)
             pretrain_2d = torch.load(config.MODEL.PRETRAIN2D)
             self.model.load_state_dict(pretrain_2d["model"])
 
@@ -107,6 +108,7 @@ class Trainer:
             else:
                 log_meters["total"] = total_loss
 
+
             # Minkowski Engine recommendation
             torch.cuda.empty_cache()
 
@@ -135,3 +137,4 @@ class Trainer:
             iteration_end = time.time()
 
         self.checkpointer.save("model_final", **self.checkpoint_arguments)
+        print('finished')

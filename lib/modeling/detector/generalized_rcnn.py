@@ -37,9 +37,11 @@ class GeneralizedRCNN(nn.Module):
             self.train()
         losses = {}
 
-        bounding_boxes_gt = [target.get_field("instance2d") for target in targets]
+        #bounding_boxes_gt = [target.get_field("instance2d") for target in targets]
+        bounding_boxes_gt = [target.get_field("instance2d").to(config.MODEL.DEVICE) for target in targets]
 
         features = features["blocks"][2:3]
+
 
         results_detection, losses_rpn = self.rpn(features, bounding_boxes_gt)
         losses.update(losses_rpn)
@@ -106,7 +108,7 @@ class GeneralizedRCNN(nn.Module):
 
                 raw_matched.append(segmentation_masks.get_mask_tensor())
 
-                locations = targets_per_image.get_field("mask2dInstance")[[]]  # empty
+                locations = targets_per_image.get_field("mask2d_instance")[[]]  # empty
                 instance_locations_matched.append(locations)
 
         return boxes_matched, instance_matched, raw_matched, instance_locations_matched

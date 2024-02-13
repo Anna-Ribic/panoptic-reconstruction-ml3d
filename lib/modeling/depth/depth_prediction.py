@@ -42,6 +42,7 @@ class DepthPrediction(nn.Module):
         depth_return = [DepthMap(p_[0].cpu(), t_.get_intrinsic()) for p_, t_ in zip(depth_pred, depth_target)]
         depth_target = torch.stack([target.get_tensor() for target in depth_target]).float().to(config.MODEL.DEVICE).unsqueeze(1)
 
+
         results = {
             "prediction": depth_pred,
             "return": depth_return,
@@ -53,8 +54,9 @@ class DepthPrediction(nn.Module):
         if self.training:
 
             # Mask invalid depth pixels
-            valid_masks = torch.stack([(depth.depth_map != 0.0).bool() for depth in depth_target], dim=0)
-            valid_masks.unsqueeze_(1)
+            valid_masks = torch.stack([(depth != 0.0).bool() for depth in depth_target], dim=0)
+            #valid_masks = torch.stack([(depth.depth_map != 0.0).bool() for depth in depth_target], dim=0)
+            #valid_masks.unsqueeze_(1)
 
             grad_target = self.get_gradient(depth_target)
             grad_pred = self.get_gradient(depth_pred)

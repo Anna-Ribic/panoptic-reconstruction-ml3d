@@ -124,11 +124,13 @@ class PanopticReconstructionQuality(Metric):
         per_class_results = {}
 
         for class_label, class_stats in self.categories.items():
+            print('class_label', class_label)
             iou = class_stats.iou
             tp = class_stats.tp
             fp = class_stats.fp
             fn = class_stats.fn
             num_samples = class_stats.n
+            print('num samples', num_samples)
 
             if tp + fp + fn == 0:
                 per_class_results[class_label] = {'pq': 0.0, 'sq': 0.0, 'rq': 0.0, 'n': 0}

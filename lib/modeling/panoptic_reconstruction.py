@@ -13,6 +13,7 @@ from lib.structures import FieldList, DepthMap
 from lib.utils import logger
 from lib.config import config
 
+import matplotlib.pyplot as plt
 
 class PanopticReconstruction(nn.Module):
     def __init__(self) -> None:
@@ -54,6 +55,7 @@ class PanopticReconstruction(nn.Module):
         instance_losses, instance_results = self.instance2d(image_features, targets, is_validate)
         losses.update({"instance": instance_losses})
         results.update({"instance": instance_results})
+
 
         # 2D to 3D
         # Projection

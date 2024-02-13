@@ -54,6 +54,7 @@ class Checkpointer:
             logger.info("No checkpoint found. Initializing model from scratch")
             return {}
         logger.info("Loading checkpoint from {}".format(f))
+        print('Loading from file: {}'.format(f))
         checkpoint = self._load_file(f)
 
         self._load_model(checkpoint)
@@ -108,6 +109,7 @@ class Checkpointer:
         return torch.load(f, map_location=torch.device("cpu"))
 
     def _load_model(self, checkpoint):
+        print('Loading Model!')
         load_state_dict(self.model, checkpoint.pop("model"))
 
 

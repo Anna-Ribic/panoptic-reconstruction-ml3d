@@ -39,6 +39,7 @@ def build_dataset(dataset_name) -> data.Dataset:
     dataset_catalog = paths_catalog.DatasetCatalog
 
     info = dataset_catalog.get(dataset_name)
+    print('info',info)
     factory = getattr(datasets, info.pop("factory"))
     info["fields"] = config.DATASETS.FIELDS
 

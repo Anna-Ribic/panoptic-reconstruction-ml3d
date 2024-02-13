@@ -96,7 +96,7 @@ sem_labels = [
 
 def write_distance_field(distance_field: Union[np.array, torch.Tensor], labels: Optional[Union[np.array, torch.Tensor]],
                          output_file: os.PathLike, iso_value: float = 1.0, truncation: float = 3.0,
-                         color_palette=None, transform=None, semantic_labels=None) -> None:
+                         color_palette=None, transform=None, semantic_labels=None,  groundtruth_inst=None, mapping_meta=None, dict_future=None) -> None:
     if isinstance(distance_field, torch.Tensor):
         distance_field = distance_field.detach().cpu().numpy()
 
@@ -110,19 +110,30 @@ def write_distance_field(distance_field: Union[np.array, torch.Tensor], labels: 
             for v in np.unique(labels):
                 distance_field_temp = distance_field.copy()
                 distance_field_temp[labels!=v] = truncation
-                sem = np.unique(semantic_labels[labels==v])[0]
-                sem_name= sem_labels[sem]
-                print(f'Instance {v+1} has label {sem_name}', )
-                vertices, colors, triangles = get_mesh_with_semantics(distance_field_temp, labels, iso_value, truncation, color_palette)
+                sem_uniq = np.unique(semantic_labels[labels==v])
+                sem = np.max(sem_uniq)
+                if sem not in (0, 10, 11):
+                    sem_name= sem_labels[sem]
+                    print(f'Instance {v+1} has label {sem_name}', )
+                    vertices, colors, triangles = get_mesh_with_semantics(distance_field_temp, labels, iso_value, truncation, color_palette)
 
-                if transform is not None:
-                    if isinstance(transform, torch.Tensor):
-                        transform = transform.detach().cpu().numpy()
+                    if transform is not None:
+                        if isinstance(transform, torch.Tensor):
+                            transform = transform.detach().cpu().numpy()
 
-                vertices = coords_multiplication(transform, vertices)
-                io.write_ply(vertices, colors, triangles, str(output_file)[:-4]+str(v+1)+sem_name+'.ply')
+                    vertices = coords_multiplication(transform, vertices)
+                    io.write_ply(vertices, colors, triangles, str(output_file)[:-4]+str(v+1)+sem_name+'.ply')
+                    if groundtruth_inst is not None:
+                        est_object_mask = labels == v
+                        gt_est_mask = torch.Tensor(groundtruth_inst[est_object_mask])
+                        gt_inst, _ = torch.mode(gt_est_mask[gt_est_mask!=0],0)
+                        gt_inst = gt_inst.item()
+                        print('groundtruth_instance_id:' , gt_inst)
+                        id = mapping_meta[gt_inst]
+                        if id in dict_future.keys():
+                            print('Object has label ', dict_future[id])
 
-            
+
         vertices, colors, triangles = get_mesh_with_semantics(distance_field, labels, iso_value, truncation,
                                                               color_palette)
     else:

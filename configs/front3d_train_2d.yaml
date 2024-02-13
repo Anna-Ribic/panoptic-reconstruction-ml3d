@@ -1,6 +1,6 @@
 MODEL:
     FIX2D: False
-    PRETRAIN: ""
+    PRETRAIN: "" #"data/panoptic_front3d_v2.pth"
 
     FIXNORM: False
 
@@ -53,17 +53,17 @@ DATASETS:
     FIELDS: ("color", "depth", "instance2d")
 
 DATALOADER:
-    IMS_PER_BATCH: 8
+    IMS_PER_BATCH: 1
     MAX_ITER: 500000
     SHUFFLE: True
-    NUM_WORKERS: 8
+    NUM_WORKERS: 4
 
 SOLVER:
     BASE_LR: 0.0001
     BETA_1: 0.9
     BETA_2: 0.999
     STEPS: (250000, 350000)
-    CHECKPOINT_PERIOD: 5000
+    CHECKPOINT_PERIOD: 1000
     WEIGHT_DECAY: 0.000000
-    EVALUATION_PERIOD: 50000
+    EVALUATION_PERIOD: 1000
 
