@@ -63,11 +63,14 @@ As subsample of the data can be found here: [link](https://drive.google.com/file
 
 We jointly train the 2D encoder, depth estimation and 2D instance prediction of the panoptic reconstruction model. The model checkpoint can be found [here](resources/trained2d-ours.zip)
 
+We fine-tune SDFusion [4] on the 3D-Future dataset [5]. The fine-tuned model can be found [here](https://drive.google.com/file/d/1BLG3sJwKfgB2VOIS1VRGI4Ij6W3DrOYE/view?usp=drive_link)
+
 # References
 
 1. Fu et al. - 3d-Front: 3d Furnished Rooms with Layouts and Semantics
 2. Denninger et al. - BlenderProc
 3. Dahnert et al. - Panoptic 3d scene reconstruction from a single rgb image
 4. Cheng et al. - Sdfusion: Multimodal 3d shape completion, reconstruction, and generation.
+5. Fu et al. - 3d-future: 3d furniture shape with texture.
 
 
