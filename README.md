@@ -25,7 +25,7 @@ conda activate panoptic
 Follow the official instructions to install the [maskrcnn-benchmark repo](https://github.com/facebookresearch/maskrcnn-benchmark).
 
 ### Minkowski Engine (fork, custom)
-Follow the instructions to compile [our forked Minkowski Engine version](https://github.com/xheon/MinkowskiEngine) from source.
+Follow the instructions to compile [this forked Minkowski Engine version](https://github.com/xheon/MinkowskiEngine) from source.
 
 ### Compute library
 Finally, compile this library. 
@@ -59,9 +59,9 @@ We use version from 2020-06-14 of the data.
 We generate a new synthetic 3D-Front dataset comprising over 24,000 samples, each annotated with both 2D and 3D ground truth data.
 As subsample of the data can be found here: [link](https://drive.google.com/file/d/1P_GLihTcxCPBHk1T25IYN50OvQBp3ANt/view?usp=sharing)
 
-#### Models:
+## Models:
 
-We jointly train the 2D encoder, depth estimation and 2D instance prediction of the panoptic reconstruction model. The model checkpoint can be found under 'resources/trained2d-ours.zip'
+We jointly train the 2D encoder, depth estimation and 2D instance prediction of the panoptic reconstruction model. The model checkpoint can be found [here](resources/trained2d-ours.zip)
 
 # References
 
