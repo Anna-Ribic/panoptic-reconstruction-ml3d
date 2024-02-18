@@ -13,7 +13,6 @@ The code was tested with the following configuration:
 - CUDA 10.2
 - Minkowski Engine 0.5.1, fork
 - Mask RCNN Benchmark
-- Nvidia 2080 Ti, 11GB
 
 ## Installation
 ```
@@ -50,20 +49,25 @@ We use Blender-Proc [2] to render photo-realistic images from individual rooms.
 We use version from 2020-06-14 of the data.
 
 <p align="center">
-    <img width="100%" src="images/front3d_samples.jpg"/>
+    <img width="30%" src="images/input.jpeg"/>
+    <img width="30%" src="images/depth.jpeg"/>
+    <img width="30%" src="images/seg.jpg"/>
 </p>
 
-#### Download:
-TDOD
 
-#### Modifications:
-TODO
+#### Download:
+We generate a new synthetic 3D-Front dataset comprising over 24,000 samples, each annotated with both 2D and 3D ground truth data.
+As subsample of the data can be found here: [link](https://drive.google.com/file/d/1P_GLihTcxCPBHk1T25IYN50OvQBp3ANt/view?usp=sharing)
+
+#### Models:
+
+We jointly train the 2D encoder, depth estimation and 2D instance prediction of the panoptic reconstruction model. The model checkpoint can be found under 'resources/trained2d-ours.zip'
 
 # References
 
 1. Fu et al. - 3d-Front: 3d Furnished Rooms with Layouts and Semantics
 2. Denninger et al. - BlenderProc
-3. TODO
-4. TODO
+3. Dahnert et al. - Panoptic 3d scene reconstruction from a single rgb image
+4. Cheng et al. - Sdfusion: Multimodal 3d shape completion, reconstruction, and generation.
 
 
