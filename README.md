@@ -1,8 +1,9 @@
 # Increasing Object-Level Reconstruction Quality in Single-Image 3D Scene Reconstruction
 
 ## Abstract
-While humans can easily infer the 3D structure as well as the complete (panoptic) semantics of a scene from a single image, this task has been a longstanding challenge in the field of computer vision. The task fundamentally prerequisites learning a strong prior of the 3D world. Traditional methods have made significant strides, from generating geometrically coherent structures to learning different
-instance semantics. More recent approaches directly learn the 3D panoptic semantics as a whole, yet they fall short in capturing the intricate details and nuances at the object level. This paper introduces a novel approach to bridge this gap by integrating a specialized object-level model into the reconstruction process, thereby leveraging the specialized model’s object-priors. Our approach models panoptic 3D reconstruction as a two-stage problem. We first use the model of Dahnert et al. [Paper](https://manuel-dahnert.com/pdf/dahnert2021panoptic-reconstruction.pdf) to create an initial reconstruction. Then, we leverage the instance masks to extract the object geometries out of the reconstructed scene. We input each of the extracted objectsalong with cropped images from the scene and text labelsinto a diffusion model [5] to refine the rough object-level geometries. Finally, we integrate the refined object geometries back into the initial scene reconstruction to obtain a complete and refined panoptic 3D scene reconstruction.
+ Panoptic 3D Scene Reconstruction describes the joint task of geometric reconstruction, 3D semantic segmentation, and 3D instance
+segmentation. A multitude of tasks in Robotics, Augmented Reality and Human-Computer Interaction rely on this comprehensive understanding of 3d scenes. Building upon the method introduced by Dahnert et al. [3], which performs panoptic 3D scene reconstruction from a single RGB image, our proposal aims to enhance the visual clarity and discernibility of the generated geometry through a Retrieval-inspired approach.  Leveraging a 3D asset generation framework [4] , we conduct object-level reconstruction conditioned on semantic labels and image input, further advancing the capabilities of panoptic 3D scene reconstruction.
+
 
 ## Environment
 The code was tested with the following configuration:
@@ -61,6 +62,8 @@ TODO
 # References
 
 1. Fu et al. - 3d-Front: 3d Furnished Rooms with Layouts and Semantics
-1. Denninger et al. - BlenderProc
+2. Denninger et al. - BlenderProc
+3. TODO
+4. TODO
 
 
