@@ -4,6 +4,12 @@
  Panoptic 3D Scene Reconstruction describes the joint task of geometric reconstruction, 3D semantic segmentation, and 3D instance
 segmentation. A multitude of tasks in Robotics, Augmented Reality and Human-Computer Interaction rely on this comprehensive understanding of 3d scenes. Building upon the method introduced by Dahnert et al. [3], which performs panoptic 3D scene reconstruction from a single RGB image, our proposal aims to enhance the visual clarity and discernibility of the generated geometry through a Retrieval-inspired approach.  Leveraging a 3D asset generation framework [4] , we conduct object-level reconstruction conditioned on semantic labels and image input, further advancing the capabilities of panoptic 3D scene reconstruction.
 
+<p align="center">
+    <img width="100%" src="images/pipeline.png"/>
+</p>
+The diagram illustrates the multi-step process of panoptic scene reconstruction, object-level reconstruction, and object-level shape
+alignment. This includes leveraging Panoptic 3D [3] for initial scene reconstruction, SDFusion [4] for object shape reconstruction, and a
+custom registration algorithm for precise alignment of reconstructed objects within the scene.
 
 ## Environment
 The code was tested with the following configuration:
