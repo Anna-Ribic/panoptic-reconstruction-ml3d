@@ -6,4 +6,5 @@
   python test_joined_single_image.py -io "<scene_id>/<scene image name without filetype ending>" -sf "df_steps-12000"
   Example:
   python test_joined_single_image.py -io "5d71dabb-9464-4e0c-8d98-e829ade827af/rgb_0034" -sf "df_steps-12000"
+```
 5. You can visualize the results using the "visualize_mesh.ipynb" notebook
