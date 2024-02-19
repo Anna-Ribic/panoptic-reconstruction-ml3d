@@ -49,7 +49,7 @@ python setup.py install
 ```
 
 ## Inference
-For inference, please switch to our [https://github.com/Anna-Ribic/panoptic-reconstruction-ml3d/tree/inference](inference branch) and follow the steps there.
+For inference, please switch to our [inference branch](https://github.com/Anna-Ribic/panoptic-reconstruction-ml3d/tree/inference) and follow the steps there.
 
 ## Datasets
 
