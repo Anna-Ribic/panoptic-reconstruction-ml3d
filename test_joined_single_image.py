@@ -24,10 +24,7 @@ from lib.visualize.utils import create_color_palette
 import trimesh
 from skimage import measure 
 from pysdf import SDF
-#import kaolin as kal
-import mesh2sdf 
 import open3d
-import copy
 import math
 
 from pytorch3d.loss import chamfer_distance
