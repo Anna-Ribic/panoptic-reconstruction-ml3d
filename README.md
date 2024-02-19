@@ -11,6 +11,12 @@ The diagram illustrates the multi-step process of panoptic scene reconstruction,
 alignment. This includes leveraging Panoptic 3D [3] for initial scene reconstruction, SDFusion [4] for object shape reconstruction, and a
 custom registration algorithm for precise alignment of reconstructed objects within the scene.
 
+### Results
+
+<p align="center">
+    <img width="100%" src="images/results.png"/>
+</p>
+
 ## Environment
 The code was tested with the following configuration:
 - Ubuntu 20.04
